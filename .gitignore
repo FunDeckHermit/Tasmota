@@ -23,7 +23,7 @@ sdkconfig.defaults
 data
 unpacked_fs
 unpacked_boards
-tasmota/user_config_override.h
+#tasmota/user_config_override.h
 tasmota/include/local_ca_data.h
 tasmota/include/local_ca_descriptor.h
 variants
@@ -34,7 +34,7 @@ firmware.map
 firmware.asm
 tasmota/tasmota.ino.cpp
 platformio_override.ini
-platformio_tasmota_cenv.ini
+#platformio_tasmota_cenv.ini
 platformio_tasmota_user_env.ini
 platformio_tasmota_core3_env.ini
 lib/libesp32/berry/generate/*
