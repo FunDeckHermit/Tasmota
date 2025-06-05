@@ -87,7 +87,27 @@ Examples :
 // !!! Remember that your changes GOES AT THE BOTTOM OF THIS FILE right before the last #endif !!!
 */
 
+#undef  STA_SSID1
+#define STA_SSID1         "A"             // [Ssid1] Wifi SSID
 
+#undef  STA_PASS1
+#define STA_PASS1         "CorrectHorse"     // [Password1] Wifi password
+
+#define USE_PING
+
+#undef MQTT_BUTTONS
+#define MQTT_BUTTONS true
+#define USER_TEMPLATE "{\"NAME\":\"Noldus TCU HMI\",\"GPIO\":[64,65,66,1,1,1,1,1,1,1,1,1,224,225,67,226,227,1,1,1,1,68,0,0,0,0,0,1,1,1,1,1,1,1,1,1,69,70],\"FLAG\":0,\"BASE\":1}"  // [Template] Set JSON template
+#define MODULE USER_MODULE
+
+#undef APP_INTERLOCK_MODE
+#define APP_INTERLOCK_MODE true
+
+#undef APP_INTERLOCK_GROUP_1
+#define APP_INTERLOCK_GROUP_1  0x03
+
+#undef APP_INTERLOCK_GROUP_2
+#define APP_INTERLOCK_GROUP_2  0x0C
 
 
 
