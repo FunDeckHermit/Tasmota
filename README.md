@@ -15,6 +15,12 @@ _Written for PlatformIO._
 
 <hr></hr>
 
+## Fork of Tasmota for development of custom Hardware
+Each device has it's own branch with changes to the config done to it.
+Use `platformio run -e tasmota32s3` to build the firmware
+Use https://tasmota.github.io/install/ to flash the firmware
+Output files are in the build_output directory
+
 ## Easy install
 
 Easy initial installation of Tasmota can be performed using the [Tasmota WebInstaller](https://tasmota.github.io/install/).
