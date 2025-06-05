@@ -93,8 +93,12 @@ Examples :
 #undef  STA_PASS1
 #define STA_PASS1         "CorrectHorse"     // [Password1] Wifi password
 
-#define USE_PING
+#ifdef LIGHT_CHANNEL_MODE
+#undef LIGHT_CHANNEL_MODE
+#define LIGHT_CHANNEL_MODE true
+#endif
 
+#define USE_PING
 #define USE_I2C
 #define USE_DISPLAY
 #define USE_DISPLAY_LCD
