@@ -95,6 +95,10 @@ Examples :
 
 #define USE_PING
 
+#define USE_I2C
+#define USE_DISPLAY
+#define USE_DISPLAY_LCD
+
 #undef MQTT_BUTTONS
 #define MQTT_BUTTONS true
 #define USER_TEMPLATE "{\"NAME\":\"Noldus TCU HMI\",\"GPIO\":[64,65,66,1,1,1,1,1,1,1,1,1,224,225,67,226,227,1,1,1,1,68,0,0,0,0,0,1,1,1,1,1,1,1,1,1,69,70],\"FLAG\":0,\"BASE\":1}"  // [Template] Set JSON template
