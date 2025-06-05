@@ -24,8 +24,10 @@
 #define XDSP_01                1
 #define XI2C_03                3            // See I2CDEVICES.md
 
-#define LCD_ADDRESS1           0x27         // LCD I2C address option 1
-#define LCD_ADDRESS2           0x3F         // LCD I2C address option 2
+#define LCD_ADDRESS1           0x20         // LCD I2C address option 1
+#define LCD_ADDRESS2           0x27         // LCD I2C address option 2
+#define LCD_ADDRESS3           0x3F         // LCD I2C address option 3
+
 
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
@@ -65,6 +67,10 @@ void LcdInitDriver(void) {
     }
     else if (I2cSetDevice(LCD_ADDRESS2)) {
       Settings->display_address[0] = LCD_ADDRESS2;
+      Settings->display_model = XDSP_01;
+    }
+    else if (I2cSetDevice(LCD_ADDRESS3)) {
+      Settings->display_address[0] = LCD_ADDRESS3;
       Settings->display_model = XDSP_01;
     }
   }
