@@ -117,6 +117,8 @@ Examples :
 #undef APP_INTERLOCK_GROUP_2
 #define APP_INTERLOCK_GROUP_2  0x0C
 
+#define USE_BERRY_DEBUG
+
 
 
 #endif  // _USER_CONFIG_OVERRIDE_H_
