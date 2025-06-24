@@ -3,7 +3,7 @@ import math
 import string
 import gpio
 
-var lcd_module = module("lcd_api")
+var lcd_module = module("lcd_4bit")
 
 class LcdApi : Driver
     static LCD_CLR = 0x01              # DB0: clear display
@@ -214,7 +214,7 @@ class GpioLcd : LcdApi
     gpio.pin_mode(self.d5_pin, gpio.OUTPUT)
     gpio.pin_mode(self.d6_pin, gpio.OUTPUT)
     gpio.pin_mode(self.d7_pin, gpio.OUTPUT)
-    
+
     self.hal_sleep_us(20000)   # Allow LCD time to powerup
     # Send reset 3 times
     self.hal_write_init_nibble(self.LCD_FUNCTION_RESET)
@@ -251,7 +251,7 @@ class GpioLcd : LcdApi
     self.hal_write_8bits(cmd)
     if cmd <= 3
       self.hal_sleep_us(5000)
-    end   
+    end
   end
 
   def hal_write_data(data)
@@ -261,7 +261,7 @@ class GpioLcd : LcdApi
 
   def hal_write_8bits(value)
     self.hal_write_4bits(value >> 4)
-    self.hal_write_4bits(value)    
+    self.hal_write_4bits(value)
   end
 
   def hal_write_4bits(nibble)
@@ -269,7 +269,7 @@ class GpioLcd : LcdApi
     gpio.digital_write(self.d6_pin, nibble & 0x04)
     gpio.digital_write(self.d5_pin, nibble & 0x02)
     gpio.digital_write(self.d4_pin, nibble & 0x01)
-    self.hal_pulse_enable()   
+    self.hal_pulse_enable()
   end
 end
 
