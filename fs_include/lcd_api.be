@@ -2,6 +2,8 @@ import undefined
 import math
 import string
 
+var lcdapi_module = module("lcd_api")
+
 class LcdApi : Driver
     static LCD_CLR = 0x01              # DB0: clear display
     static LCD_HOME = 0x02             # DB1: return to home position
@@ -188,3 +190,14 @@ class LcdApi : Driver
       tasmota.delay((usecs / 1000) + 1)
     end
 end
+
+lcdapi_module.init = 
+  def(m)
+    class LcdApi_factory
+      def create(rows, columns)
+        return LcdApi(rows, columns)
+      end
+    end
+    return LcdApi_factory()
+  end
+return lcdapi_module
