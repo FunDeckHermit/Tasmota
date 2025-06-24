@@ -191,7 +191,7 @@ class LcdApi : Driver
     end
 end
 
-lcdapi_module.init = 
+lcdapi_module.init =
   def(m)
     class LcdApi_factory
       def create(rows, columns)
