@@ -1,8 +1,9 @@
 import undefined
 import math
 import string
+import gpio
 
-var lcdapi_module = module("lcd_api")
+var lcd_module = module("lcd_api")
 
 class LcdApi : Driver
     static LCD_CLR = 0x01              # DB0: clear display
@@ -191,13 +192,94 @@ class LcdApi : Driver
     end
 end
 
-lcdapi_module.init =
+class GpioLcd : LcdApi
+  var rs_pin, enable_pin, d4_pin, d5_pin, d6_pin, d7_pin
+  def init(rs_pin, enable_pin, d4_pin, d5_pin, d6_pin, d7_pin, num_lines, num_columns)
+    print("Initialising GpioLcd instance")
+
+    self.rs_pin = rs_pin
+    self.enable_pin = enable_pin
+    self.d4_pin = d4_pin
+    self.d5_pin = d5_pin
+    self.d6_pin = d6_pin
+    self.d7_pin = d7_pin
+
+    gpio.pin_mode(self.rs_pin, gpio.OUTPUT)
+    gpio.pin_mode(self.enable_pin, gpio.OUTPUT)
+    gpio.pin_mode(self.d4_pin, gpio.OUTPUT)
+    gpio.pin_mode(self.d5_pin, gpio.OUTPUT)
+    gpio.pin_mode(self.d6_pin, gpio.OUTPUT)
+    gpio.pin_mode(self.d7_pin, gpio.OUTPUT)
+
+    
+    self.hal_sleep_us(20000)   # Allow LCD time to powerup
+    # Send reset 3 times
+    self.hal_write_init_nibble(self.LCD_FUNCTION_RESET)
+    self.hal_sleep_us(5000)   # need to delay at least 4.1 msec
+    self.hal_write_init_nibble(self.LCD_FUNCTION_RESET)
+    self.hal_sleep_us(1000)
+    self.hal_write_init_nibble(self.LCD_FUNCTION_RESET)
+    self.hal_sleep_us(1000)
+    var cmd = self.LCD_FUNCTION
+    self.hal_write_init_nibble(cmd)
+    self.hal_sleep_us(1000)
+    super(self).init(num_lines, num_columns)
+    if num_lines > 1
+      cmd |= self.LCD_FUNCTION_2LINES
+    end
+    self.hal_write_command(cmd)
+  end
+
+  def hal_pulse_enable()
+    gpio.digital_write(self.enable_pin, 0)
+    self.hal_sleep_us(1)
+    gpio.digital_write(self.enable_pin, 1)
+    self.hal_sleep_us(1)
+    gpio.digital_write(self.enable_pin, 0)
+    self.hal_sleep_us(100)
+  end
+
+  def hal_write_init_nibble(nibble)
+    print(f"nibble: {nibble}")
+    self.hal_write_4bits(nibble >> 4)
+  end
+
+  def hal_write_command(cmd)
+    gpio.digital_write(self.rs_pin, 0)
+    self.hal_write_8bits(cmd)
+    if cmd <= 3
+      self.hal_sleep_us(5000)
+    end   
+  end
+
+  def hal_write_data(data)
+    gpio.digital_write(self.rs_pin, 1)
+    self.hal_write_8bits(data)
+  end
+
+  def hal_write_8bits(value)
+    print(f"Writing 8bits: {value}")
+    self.hal_write_4bits(value >> 4)
+    self.hal_write_4bits(value)    
+  end
+
+  def hal_write_4bits(nibble)
+    gpio.digital_write(self.d7_pin, nibble & 0x08)
+    gpio.digital_write(self.d6_pin, nibble & 0x04)
+    gpio.digital_write(self.d5_pin, nibble & 0x02)
+    gpio.digital_write(self.d4_pin, nibble & 0x01)
+    self.hal_pulse_enable()   
+  end
+end
+
+
+lcd_module.init =
   def(m)
-    class LcdApi_factory
-      def create(rows, columns)
-        return LcdApi(rows, columns)
+    class Lcd_factory
+      def create(rs_pin, enable_pin, d4_pin, d5_pin, d6_pin, d7_pin, num_lines, num_columns)
+        return GpioLcd(rs_pin, enable_pin, d4_pin, d5_pin, d6_pin, d7_pin, num_lines, num_columns)
       end
     end
-    return LcdApi_factory()
+    return Lcd_factory()
   end
-return lcdapi_module
+return lcd_module
