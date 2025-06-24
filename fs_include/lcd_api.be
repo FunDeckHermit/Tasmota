@@ -106,11 +106,11 @@ class LcdApi : Driver
         self.cursor_x = cursor_x
         self.cursor_y = cursor_y
         var addr = cursor_x & 0x3f
-
         # Lines 1 & 3 add 0x40 while lines 2 & 3 add number of columns
-        if cursor_y % 2 == 1
+        if cursor_y & 0x01
             addr += 0x40
-        else
+        end
+        if cursor_y & 0x02
             addr += self.num_columns
         end
         self.hal_write_command(self.LCD_DDRAM | addr)
@@ -173,7 +173,6 @@ class LcdApi : Driver
         # Write a command to the LCD.
         # It is expected that a derived HAL class will implement this
         # function.
-        print(cmd)
         return undefined
     end
 
@@ -183,19 +182,24 @@ class LcdApi : Driver
 
         # It is expected that a derived HAL class will implement this
         # function.
-        print(data)
         return undefined
     end
 
     def hal_sleep_us(usecs)
-      tasmota.delay((usecs / 1000) + 1)
+      if usecs >= 1000
+        tasmota.delay((usecs / 1000) + 1)
+      else
+        for i: 0 .. usecs
+          # empty for loops aren't optimized out in Berry
+        end
+      end
     end
 end
+
 
 class GpioLcd : LcdApi
   var rs_pin, enable_pin, d4_pin, d5_pin, d6_pin, d7_pin
   def init(rs_pin, enable_pin, d4_pin, d5_pin, d6_pin, d7_pin, num_lines, num_columns)
-    print("Initialising GpioLcd instance")
 
     self.rs_pin = rs_pin
     self.enable_pin = enable_pin
@@ -210,7 +214,6 @@ class GpioLcd : LcdApi
     gpio.pin_mode(self.d5_pin, gpio.OUTPUT)
     gpio.pin_mode(self.d6_pin, gpio.OUTPUT)
     gpio.pin_mode(self.d7_pin, gpio.OUTPUT)
-
     
     self.hal_sleep_us(20000)   # Allow LCD time to powerup
     # Send reset 3 times
@@ -240,7 +243,6 @@ class GpioLcd : LcdApi
   end
 
   def hal_write_init_nibble(nibble)
-    print(f"nibble: {nibble}")
     self.hal_write_4bits(nibble >> 4)
   end
 
@@ -258,7 +260,6 @@ class GpioLcd : LcdApi
   end
 
   def hal_write_8bits(value)
-    print(f"Writing 8bits: {value}")
     self.hal_write_4bits(value >> 4)
     self.hal_write_4bits(value)    
   end
