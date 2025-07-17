@@ -105,7 +105,7 @@ Examples :
 
 #undef MQTT_BUTTONS
 #define MQTT_BUTTONS true
-#define USER_TEMPLATE "{\"NAME\":\"Noldus TCU HMI\",\"GPIO\":[64,65,66,1,416,640,608,417,1,1,1,1,224,225,67,226,227,1792,1824,1,1,68,0,0,0,0,0,1,1,1,1,1,1,1,1,1,69,70],\"FLAG\":0,\"BASE\":1}"  // [Template] Set JSON template
+#define USER_TEMPLATE "{\"NAME\":\"Noldus TCU HMI\",\"GPIO\":[64,65,66,1,416,640,608,417,1,1,1,1,224,225,67,227,226,1792,1824,1,1,68,0,0,0,0,0,1,1,1,1,1,1,1,1,1,69,70],\"FLAG\":0,\"BASE\":1}"  // [Template] Set JSON template
 #define MODULE USER_MODULE
 
 #undef APP_INTERLOCK_MODE
